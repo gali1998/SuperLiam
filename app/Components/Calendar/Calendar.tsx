@@ -3,6 +3,7 @@ import Calendar from 'react-calendar';
 import { SetDayModal } from '../SetDayModal/SetDayModal';
 import './Calendar.scss';
 import Modal from 'react-responsive-modal';
+import {DaySettingService} from '../../Services/DaySettingService';
 
 export class CalendarManager extends Component {
     getNextMonth = (date) => {
@@ -11,7 +12,8 @@ export class CalendarManager extends Component {
 
     state = {
         day: this.getNextMonth(new Date()),
-        open: false
+        open: false,
+        setDays: (new DaySettingService).getAllSetDays(),
     }
 
     onClickDay = (day) => {
@@ -27,8 +29,13 @@ export class CalendarManager extends Component {
         this.setState({ open: false });
     };
 
+    onSubmitDay = () => {
+        this.onCloseModal();
+    }
+
     render() {
         const { open } = this.state;
+        console.log(this.state.setDays);          
         return (
             <div>
                 <Calendar
@@ -36,11 +43,11 @@ export class CalendarManager extends Component {
                     value={this.state.day}
                     calendarType="Hebrew"
                     locale="he-IL-u-ca-hebrew-tz-jeruslm"
-                    tileClassName="tile"
+                    tileClassName= {({ date }) => this.state.setDays.indexOf(date) === -1 ? 'tile' : 'tile set'}
                     className="calendar"
                 />
-                <Modal open={open} onClose={this.onCloseModal} showCloseIcon={false} center>
-                    <SetDayModal date={this.state.day}/>
+                <Modal open={open} onClose={this.onCloseModal} center>
+                    <SetDayModal date={this.state.day} onSetDay={this.onSubmitDay}/>
                 </Modal>
             </div>
         );

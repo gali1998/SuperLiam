@@ -2,6 +2,7 @@ import React from 'react';
 import './SetDayModal.scss';
 interface IProps {
     date: Date;
+    onSetDay: Function;
 }
 export class SetDayModal extends React.Component<IProps> {
     state = {
@@ -68,6 +69,7 @@ export class SetDayModal extends React.Component<IProps> {
         return (
             <div className="modal">
                 <h2>{this.state.title}</h2>
+                <button onClick={this.props.onSetDay.bind(this)}>שמור</button>
             </div>
         );
     }
