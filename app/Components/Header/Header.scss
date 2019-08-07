@@ -1,0 +1,14 @@
+.header{
+    background-color: black;
+
+    .navbar{
+        display: flex;
+        align-content:space-between;
+
+        .link {
+            color: white;
+            text-decoration: none;
+            margin: 20px;
+        }
+    }
+}
