@@ -1,19 +1,25 @@
 import React from 'react';
 import './SetDayModal.scss';
+import { DaySettingService } from '../../Services/DaySettingService';
+//import { SetDay } from '../../Models/SetDay';
+import {SoldierList} from '../SoldiersList/SoldiersList';
+
 interface IProps {
     date: Date;
     onSetDay: Function;
 }
 export class SetDayModal extends React.Component<IProps> {
     state = {
-        title: ""
+        title: "",
+        availableSoldiers: [] as string[]
     }
 
     constructor(props: IProps) {
         super(props);
 
         this.state = {
-            title: this.getTitle()
+            title: this.getTitle(),
+            availableSoldiers: (new DaySettingService()).getAvailableSoldiers()
         }
     }
     getDay = (date) => {
@@ -34,6 +40,12 @@ export class SetDayModal extends React.Component<IProps> {
                 return "סופש";
         }
     };
+
+    save = () => {
+        this.props.onSetDay();
+
+        //(new DaySettingService).saveDay(this.props.date, new SetDay(this.state.chosenSoldies));
+    }
 
     getTitle = () => {
         let date = this.props.date;
@@ -69,6 +81,7 @@ export class SetDayModal extends React.Component<IProps> {
         return (
             <div className="modal">
                 <h2>{this.state.title}</h2>
+                <SoldierList />
                 <button onClick={this.props.onSetDay.bind(this)}>שמור</button>
             </div>
         );

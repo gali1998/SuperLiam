@@ -18,6 +18,7 @@ export class CalendarManager extends Component {
 
     onClickDay = (day) => {
         this.setState({ day });
+        console.log(day);
         this.onOpenModal();
     }
 
