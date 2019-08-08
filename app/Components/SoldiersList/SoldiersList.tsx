@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import { DaySettingService } from '../../Services/DaySettingService';
 import './SoldierList.scss';
+import { SetDay } from '../../Models/SetDay';
 
 interface IProps {
-
+    onSetDay: Function,
+    date: Date
 }
 
 export class SoldierList extends Component<IProps> {
@@ -21,27 +23,103 @@ export class SoldierList extends Component<IProps> {
         }
     }
 
-    checkSoldier = (soldier:string) => {
-        let checkedSoldiers: string[] = this.state.checkedSoldiers;
+    insertSoldier = (index, id) => {
+        let soldier: any = document.getElementById(id);
 
-        if (this.state.checkedSoldiers.indexOf(soldier) === -1) {
-            checkedSoldiers.push(soldier);
-        } else {
-            checkedSoldiers.splice(checkedSoldiers.indexOf(soldier), 1);
+        if (soldier) {
+            soldier = soldier.value;
+        }
+        let checkedSoldiers = this.state.checkedSoldiers;
+        checkedSoldiers[index -1] = soldier;
+
+        this.setState({checkedSoldiers});
+        console.log(this.state.checkedSoldiers);
+    }
+
+    validate = () => {
+        if(this.state.checkedSoldiers.length < 5) {
+            return false;
         }
 
-        this.setState({ checkedSoldiers });
+        for (let index = 0; index < 5; index++){
+            let currentSoldier = this.state.checkedSoldiers[index];
+            let soldiers: string | undefined = this.state.checkedSoldiers.find(soldier => soldier === this.state.checkedSoldiers[index]);
+            if (!soldiers || soldiers.length > 1 || !currentSoldier || currentSoldier === "" || currentSoldier === "בחר חייל") {
+                return false;
+            }
+        }
+
+        return true;
     }
+
+    save = () => {
+        if (this.validate){
+            (new DaySettingService()).saveDay(this.props.date, new SetDay(this.state.checkedSoldiers));
+            this.props.onSetDay();
+        } else {
+            alert("error");
+        }
+    };
 
     render() {
         return (
             <div>
-                <h3>חיילים מסומנים: {this.state.checkedSoldiers.length}</h3>
-                <ul>
-                    {this.state.availableSoldiers.map(soldier => {
-                        return <li><input type="checkbox" onClick={} />{soldier}</li>
-                    })}
-                </ul>
+                <div>
+                    <p><label> שומר 1</label>
+                        <select id="select1" onChange={() => this.insertSoldier(1, "select1")}>
+                            <option disabled selected value=""> בחר חייל</option>
+                            {this.state.availableSoldiers.map(soldier => {
+                                return <option value={soldier}>{soldier}</option>
+                            })}
+                        </select>
+                    </p>
+                </div>
+
+                <div>
+                    <p><label> שומר 2</label>
+                    <select id="select2" onChange={() => this.insertSoldier(2, "select2")}>
+                            <option disabled selected value=""> בחר חייל</option>
+                            {this.state.availableSoldiers.map(soldier => {
+                                return <option value={soldier}>{soldier}</option>
+                            })}
+                        </select>
+                    </p>
+                </div>
+
+                <div>
+                    <p><label> שומר 3</label>
+                    <select id="select3" onChange={() => this.insertSoldier(3, "select3")}>
+                        <option disabled selected value=""> בחר חייל</option>
+                            {this.state.availableSoldiers.map(soldier => {
+                                return <option value={soldier}>{soldier}</option>
+                            })}
+                        </select>
+                    </p>
+                </div>
+
+                <div>
+                    <p><label> שומר 4</label>
+                    <select id="select4" onChange={() => this.insertSoldier(4, "select4")}>
+                            <option disabled selected value=""> בחר חייל</option>
+                            {this.state.availableSoldiers.map(soldier => {
+                                return <option value={soldier}>{soldier}</option>
+                            })}
+                        </select>
+                    </p>
+                </div>
+
+                <div>
+                    <p><label> שומר יום</label>
+                    <select id="select5" className="day" onChange={() => this.insertSoldier(5, "select5")}>
+                            <option disabled selected value=""> בחר חייל</option>
+                            {this.state.availableSoldiers.map(soldier => {
+                                return <option value={soldier}>{soldier}</option>
+                            })}
+                        </select>
+                    </p>
+                </div>
+
+                <button className="save" onClick={() => {this.save()}}>שמור</button>
             </div>);
     }
 }

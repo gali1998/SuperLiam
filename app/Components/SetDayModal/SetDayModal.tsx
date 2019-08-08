@@ -41,12 +41,6 @@ export class SetDayModal extends React.Component<IProps> {
         }
     };
 
-    save = () => {
-        this.props.onSetDay();
-
-        //(new DaySettingService).saveDay(this.props.date, new SetDay(this.state.chosenSoldies));
-    }
-
     getTitle = () => {
         let date = this.props.date;
         let day = this.getDay(date);
@@ -81,8 +75,7 @@ export class SetDayModal extends React.Component<IProps> {
         return (
             <div className="modal">
                 <h2>{this.state.title}</h2>
-                <SoldierList />
-                <button onClick={this.props.onSetDay.bind(this)}>שמור</button>
+                <SoldierList date={this.props.date} onSetDay={this.props.onSetDay} />
             </div>
         );
     }
