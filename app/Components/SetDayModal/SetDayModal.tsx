@@ -2,7 +2,7 @@ import React from 'react';
 import './SetDayModal.scss';
 import { DaySettingService } from '../../Services/DaySettingService';
 //import { SetDay } from '../../Models/SetDay';
-import {SoldierList} from '../SoldiersList/SoldiersList';
+import { SoldierList } from '../SoldiersList/SoldiersList';
 
 interface IProps {
     date: Date;
@@ -19,9 +19,17 @@ export class SetDayModal extends React.Component<IProps> {
 
         this.state = {
             title: this.getTitle(),
-            availableSoldiers: (new DaySettingService()).getAvailableSoldiers()
+            availableSoldiers: []
         }
     }
+
+    componentDidMount() {
+        // tslint:disable-next-line: new-parens
+        (new DaySettingService).getAvailableSoldiers(this.props.date).then((soldiers) => {
+            this.setState({ availableSoldiers: soldiers });
+        });
+    }
+
     getDay = (date) => {
         let day = date.getDay() + 1;
 

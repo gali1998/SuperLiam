@@ -18,9 +18,20 @@ export class SoldierList extends Component<IProps> {
         super(props);
 
         this.state = {
-            availableSoldiers: (new DaySettingService()).getAvailableSoldiers(),
+            availableSoldiers: [],
             checkedSoldiers: []
         }
+    }
+
+    componentDidMount() {
+        // tslint:disable-next-line: new-parens
+        (new DaySettingService).getAvailableSoldiers(this.props.date).then((soldiers) => {
+            this.setState({ availableSoldiers: soldiers });
+        });
+
+        (new DaySettingService).getGuards(this.props.date).then((soldiers) => {
+            this.setState({ checkedSoldiers: soldiers });
+        });
     }
 
     insertSoldier = (index, id) => {
@@ -54,7 +65,7 @@ export class SoldierList extends Component<IProps> {
 
     save = () => {
         if (this.validate){
-            (new DaySettingService()).saveDay(this.props.date, new SetDay(this.state.checkedSoldiers));
+            (new DaySettingService()).saveDay(this.props.date, new SetDay(this.state.checkedSoldiers)).then(() => {});
             this.props.onSetDay();
         } else {
             alert("error");
